@@ -1,79 +1,37 @@
-# Aplicação Flask com IA Gemini
 
-Este projeto é uma aplicação web desenvolvida em Flask que integra uma inteligência artificial baseada no modelo Gemini. A aplicação permite que os usuários interajam com a IA por meio de uma interface simples e intuitiva.
 
-## Funcionalidades
+💬 IMAGINE SE VOCÊ PUDESSE FALAR COM SEU BANCO DE DADOS?
 
-- Interface web com formulário para envio de perguntas.
-- Processamento das perguntas com a IA Gemini.
-- Exibição das respostas geradas pela IA.
-- Estrutura modular e fácil de entender.
-- Código limpo e documentado.
+E se, ao invés de escrever consultas SQL complexas, você pudesse simplesmente perguntar:
+ "Quais os produtos mais vendidos no último trimestre?"
+ …e receber, automaticamente:
+A query SQL gerada por IA
+Os resultados formatados em tabela
+E um PDF pronto para compartilhar com a equipe de gestão
+Foi exatamente isso que eu desenvolvi: uma aplicação fullstack com Inteligência Artificial que traduz linguagem natural em comandos SQL reais, conectando-se diretamente a um banco Microsoft SQL Server.
 
-## Tecnologias Utilizadas
+ Uma solução que democratiza o acesso aos dados, quebra barreiras técnicas e entrega agilidade analítica para qualquer pessoa — analistas, estudantes, gestores e profissionais de negócios.
 
-- Python 3.x
-- Flask
-- OpenAI API (ou outra API para IA Gemini)
-- HTML/CSS para a interface
+🧪 Tecnologias:
+Python + Flask no backend
+Google Gemini API para interpretação da pergunta e geração da query
+SQL Server como banco de dados real (ex: AdventureWorks2022)
+FPDF + Matplotlib para criação automática de relatórios em PDF
+HTML/CSS/JS Vanilla no frontend, simples e responsivo
 
-## Como Executar Localmente
+🔍 Funcionalidades:
+Faça perguntas em português natural, receba SQL e resultados
+Exporte tudo em PDF com um clique
+Totalmente web, sem precisar instalar nada
+Conectado a um banco real, com leitura direta
 
-### Pré-requisitos
+🎯 Para quem serve?
+Analistas de Dados → menos tempo com query, mais tempo com insight
+Estudantes de TI → aprendizado prático e intuitivo de SQL
+DBAs → ferramental para usuários não técnicos
+Tomadores de decisão → acesso direto às respostas, sem depender de TI.
 
-- Python 3 instalado
-- Ambiente virtual (recomendado)
+📌 Projeto pessoal com foco educacional e corporativo — mas com alto potencial de expansão.
+Já imaginou algo assim na sua empresa ou universidade? Me chama, vamos trocar ideia
 
-### Passos para rodar
-
-```bash
-# Clonar o repositório
-git clone https://github.com/SEU_USUARIO/NOME_DO_REPOSITORIO.git
-
-# Entrar na pasta do projeto
-cd NOME_DO_REPOSITORIO
-
-# Criar e ativar ambiente virtual (opcional, mas recomendado)
-python -m venv venv
-# Windows
-venv\Scripts\activate
-# Linux/Mac
-source venv/bin/activate
-
-# Instalar dependências
-pip install -r requirements.txt
-
-# Executar a aplicação
-python app.py
-Acessar a aplicação
-Abra o navegador e acesse: http://127.0.0.1:5000
-
-Estrutura do Projeto
-bash
-Copiar código
-/project_root
-│
-├── app.py                # Arquivo principal da aplicação Flask
-├── templates/            # Templates HTML
-│   └── index.html
-├── static/               # Arquivos estáticos (CSS, JS, imagens)
-├── requirements.txt      # Dependências do projeto
-└── README.md             # Este arquivo
-Como Contribuir
-Contribuições são bem-vindas! Para contribuir:
-
-Fork este repositório
-
-Crie uma branch com sua feature (git checkout -b minha-feature)
-
-Faça commit das suas mudanças (git commit -m 'Adiciona nova feature')
-
-Envie para sua branch (git push origin minha-feature)
-
-Abra um Pull Request
-
-Licença
-Este projeto está licenciado sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
-
-Se tiver dúvidas ou sugestões, fique à vontade para abrir uma issue!
-
+#NLPtoSQL #Flask #SQLServer #GeminiAPI #Python #DataDriven #InteligenciaArtificial #ChatToDB #ProjetosPessoais #BI #EstudantesDeTI #DBA #DevLife

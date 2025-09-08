@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Assistente IA - Análise de Banco de Dados</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 40px;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+
+    h1 {
+      color: #222;
+    }
+
+    h2 {
+      color: #444;
+      margin-top: 30px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: auto;
+      padding: 30px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    #tables-section select {
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      max-width: 500px;
+      margin-top: 10px;
+    }
+
+    #question-form {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 30px;
+      gap: 10px;
+    }
+
+    #question-input {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+      min-width: 250px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #sql-query {
+      background-color: #f0f0f0;
+      border-left: 4px solid #007bff;
+      padding: 15px;
+      font-family: 'Courier New', monospace;
+      font-size: 16px;
+      white-space: pre-wrap;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    #report-text {
+      background-color: #e9f7ef;
+      border-left: 4px solid #28a745;
+      padding: 20px;
+      border-radius: 5px;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 15px;
+    }
+
+    .report-table th,
+    .report-table td {
+      border: 1px solid #ccc;
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    .report-table th {
+      background-color: #f0f8ff;
+      font-weight: bold;
+    }
+
+    .flex-sections {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    .flex-child {
+      flex: 1;
+      min-width: 400px;
+    }
+
+    @media (max-width: 768px) {
+      .flex-sections {
+        flex-direction: column;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Assistente IA - Análise de Banco de Dados</h1>
+    <hr>
+
+    <!-- Seção de tabelas -->
+    <div id="tables-section">
+      <h2>Tabelas disponíveis para este Banco de Dados</h2>
+      <select id="table-select">
+        <option value="">Tabelas disponíveis para este Banco de Dados</option>
+      </select>
+    </div>
+
+    <!-- Campo de pergunta -->
+    <div id="question-form">
+      <input type="text" id="question-input" placeholder="Faça uma pergunta sobre o banco de dados..." />
+      <button onclick="askQuestion()">Perguntar</button>
+    </div>
+
+    <!-- SQL + Relatório lado a lado -->
+    <div class="flex-sections">
+
+      <!-- SQL -->
+      <div class="flex-child" id="sql-section">
+        <h2><span style="color:#2196F3;">🧠</span> Query SQL Gerada</h2>
+        <div id="sql-query">Nenhuma query gerada ainda.</div>
+      </div>
+
+      <!-- Relatório -->
+      <div class="flex-child" id="report-section">
+        <h2>Resposta à consulta textual:</h2>
+        <div id="report-text">Nenhum relatório gerado.</div>
+      </div>
+
+    </div>
+
+    <!-- Botão PDF -->
+    <div style="margin-top: 20px;">
+      <button onclick="downloadPDF()">Baixar Relatório em PDF</button>
+    </div>
+  </div>
+
+  <script>
+    let reportText = "";
+    let graphData = [];
+    let currentSqlQuery = "";
+
+    function loadTables() {
+      fetch('http://127.0.0.1:5000/get_tables')
+        .then(response => response.json())
+        .then(data => {
+          let tableSelect = document.getElementById("table-select");
+          tableSelect.innerHTML = '<option value="">Tabelas disponíveis para este Banco de Dados</option>';
+          for (let table in data) {
+            let option = document.createElement("option");
+            option.value = table;
+            option.textContent = table;
+            tableSelect.appendChild(option);
+          }
+        })
+        .catch(error => console.error('Erro ao carregar tabelas:', error));
+    }
+
+    function askQuestion() {
+      let question = document.getElementById("question-input").value.trim();
+      if (!question) {
+        alert('Por favor, insira uma pergunta.');
+        return;
+      }
+
+      fetch('http://127.0.0.1:5000/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: question })
+      })
+      .then(response => response.json())
+      .then(data => {
+        reportText = data.response_text || "Nenhum relatório retornado.";
+        graphData = data.graphs || [];
+        currentSqlQuery = data.sql_query || "Nenhuma query gerada.";
+
+        document.getElementById("report-text").innerHTML = reportText;
+        document.getElementById("sql-query").innerText = currentSqlQuery;
+      })
+      .catch(error => {
+        console.error('Erro na requisição:', error);
+        alert('Erro ao processar a pergunta. Verifique o backend.');
+      });
+    }
+
+    function downloadPDF() {
+      fetch('http://127.0.0.1:5000/download_pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: reportText, graphs: graphData })
+      })
+      .then(response => response.blob())
+      .then(blob => {
+        let link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'relatorio.pdf';
+        link.click();
+      })
+      .catch(error => console.error('Erro ao gerar o PDF:', error));
+    }
+
+    window.onload = loadTables;
+  </script>
+</body>
+</html>
